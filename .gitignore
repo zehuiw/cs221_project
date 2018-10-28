@@ -1,0 +1,7 @@
+*.py[cod]
+*.png
+*.csv
+vis/
+dataset/
+.env/
+.idea/

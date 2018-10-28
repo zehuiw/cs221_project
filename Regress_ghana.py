@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 from sklearn import ensemble
 from sklearn import datasets,linear_model
@@ -11,7 +11,7 @@ selected_feature_num = 43 #31
 selected_feature_index=[4, 32, 36, 11, 28, 26, 15, 27, 38, 18, 17, 33, 31, 9, 23, 20, 13, 24, 34, 21, 16,  2 ,25, 42 ,12,
   3, 37, 39  ,7 ,41 ,30 ,14, 22 , 1 ,29 , 6 ,35  ,0 , 5 ,40 ,10 ,19, 8]
 #read dataset
-data_path='dataset\\experiments\\PPI_all_score_size_distance.txt'
+data_path='dataset/experiments/PPI_all_score_size_distance.txt'
 with open(data_path) as f:
     lines=f.readlines()
     ID=np.empty([len(lines),1], dtype=int)
@@ -43,6 +43,9 @@ X_max=X_train.max(axis=0)
 X_min=X_train.min(axis=0)
 X_tmax=np.tile(X_max,(len(X_train),1))
 X_tmin=np.tile(X_min,(len(X_train),1))
+# print (feature[0, :])
+# print (X_train[0, :])
+# print (X_min, X_max)
 X_train=(X_train-X_tmin)/(X_tmax-X_tmin)
 
 X_tmax=np.tile(X_max,(len(X_test),1))
@@ -109,6 +112,7 @@ clf.fit(X_train, np.ravel(y_train,order='C'))
 y_pred = clf.predict(X_test)
 mse = mean_squared_error(y_test, clf.predict(X_test))
 print("MSE: %.4f" % mse)
+print('Variance score: %.2f' % r2_score(y_test, y_pred))
 
 # test_score = np.zeros((params['n_estimators'],), dtype=np.float64)
 #
@@ -128,34 +132,35 @@ print("MSE: %.4f" % mse)
 # plt.show()
 #####################################################################
 
-# show results
-# The mean squared error
-print("Mean squared error: %.2f"
-      % mean_squared_error(y_test, y_pred))
-# Explained variance score: 1 is perfect prediction
-print('Variance score: %.2f' % r2_score(y_test, y_pred))
-# Plot outputs
-plt.figure(figsize=(20, 8))
-plt.subplot(1, 2, 1)
-plt.scatter(y_test,y_pred,  color='black')
-plt.plot(np.sort(y_test),np.sort(y_test), color='blue', linewidth=3)
-plt.xlim((np.min(y_pred),np.max(y_pred)))
-plt.xlim((np.min(y_test),np.max(y_test)))
-plt.xlabel('gt')
-plt.ylabel('prediction')
-plt.xticks(())
-plt.yticks(())
-plt.title('R2 %.2f'% r2_score(y_test, y_pred))
-# plt.show()
+def output():
+    # show results
+    # The mean squared error
+    print("Mean squared error: %.2f"
+          % mean_squared_error(y_test, y_pred))
+    # Explained variance score: 1 is perfect prediction
+    print('Variance score: %.2f' % r2_score(y_test, y_pred))
+    # Plot outputs
+    plt.figure(figsize=(20, 8))
+    plt.subplot(1, 2, 1)
+    plt.scatter(y_test,y_pred,  color='black')
+    plt.plot(np.sort(y_test),np.sort(y_test), color='blue', linewidth=3)
+    plt.xlim((np.min(y_pred),np.max(y_pred)))
+    plt.xlim((np.min(y_test),np.max(y_test)))
+    plt.xlabel('gt')
+    plt.ylabel('prediction')
+    plt.xticks(())
+    plt.yticks(())
+    plt.title('R2 %.2f'% r2_score(y_test, y_pred))
+    # plt.show()
 
-feature_importance = clf.feature_importances_
-# make importances relative to max importance
-feature_importance = 100.0 * (feature_importance / feature_importance.max())
-sorted_idx = np.argsort(feature_importance)
-pos = np.arange(sorted_idx.shape[0]) + .5
-plt.subplot(1, 2, 2)
-plt.barh(pos, feature_importance[sorted_idx], align='center')
-plt.yticks(pos, feature_names[sorted_idx])
-plt.xlabel('Relative Importance')
-plt.title('Variable Importance')
-plt.show()
+    feature_importance = clf.feature_importances_
+    # make importances relative to max importance
+    feature_importance = 100.0 * (feature_importance / feature_importance.max())
+    sorted_idx = np.argsort(feature_importance)
+    pos = np.arange(sorted_idx.shape[0]) + .5
+    plt.subplot(1, 2, 2)
+    plt.barh(pos, feature_importance[sorted_idx], align='center')
+    plt.yticks(pos, feature_names[sorted_idx])
+    plt.xlabel('Relative Importance')
+    plt.title('Variable Importance')
+    plt.show()
